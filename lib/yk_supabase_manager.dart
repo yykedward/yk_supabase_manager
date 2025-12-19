@@ -68,7 +68,7 @@ class YkSupabaseManager {
 
   Stream<YkUser?> get onUserChange => onAuthStateChange.map((e) => _toYkUser(e.session?.user));
 
-  Logger _logger = Logger("YkSupabaseManager");
+  final Logger _logger = Logger("YkSupabaseManager");
 
   YkSupabaseManagerDelegate? _delegate;
 
@@ -98,7 +98,7 @@ class YkSupabaseManager {
     }
     try {
       final id = await FlutterUdid.consistentUdid;
-      return id ?? 'unknown';
+      return id;
     } catch (e) {
       _log('getDeviceId failed: $e');
       return 'unknown';
