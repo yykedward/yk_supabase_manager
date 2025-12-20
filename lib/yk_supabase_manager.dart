@@ -52,7 +52,18 @@ class YkSupabaseManager {
   final Set<String> _fnInFlight = {};
   Duration _fnRateLimitWindow = const Duration(milliseconds: 500);
 
-  YkSupabaseManager._internal();
+  YkSupabaseManager._internal() {
+    _logger = Logger("YkSupabaseManager");
+    if (kDebugMode) {
+      Logger.root.level = Level.ALL;
+    } else {
+      Logger.root.level = Level.SEVERE;
+    }
+
+    _logger.onRecord.listen((value) {
+      print("[${value.level}][${value.loggerName}][${value.message}]");
+    });
+  }
 
   static final YkSupabaseManager _instance = YkSupabaseManager._internal();
 
@@ -68,18 +79,16 @@ class YkSupabaseManager {
 
   Stream<YkUser?> get onUserChange => onAuthStateChange.map((e) => _toYkUser(e.session?.user));
 
-  final Logger _logger = Logger("YkSupabaseManager");
+  late Logger _logger;
 
   YkSupabaseManagerDelegate? _delegate;
 
-  static Future<void> initialize({required String url, required String anonKey, YkSupabaseManagerDelegate? delegate}) {
+  static Future<dynamic> initialize({required String url, required String
+  anonKey, YkSupabaseManagerDelegate? delegate}) {
     YkSupabaseManager._instance._delegate = delegate;
-    if (kDebugMode) {
-      YkSupabaseManager._instance._logger.level = Level.ALL;
-    } else {
-      YkSupabaseManager._instance._logger.level = Level.SEVERE;
-    }
-    return Supabase.initialize(url: url, anonKey: anonKey);
+    return Supabase.initialize(url: url, anonKey: anonKey).then((value) {
+      return value.client.realtime.accessToken ?? "";
+    });
   }
 
   static Future<void> initializeFromEnv() {
@@ -260,6 +269,7 @@ extension YkSupabaseStorageExtension on YkSupabaseManager {
 
 /// MARK: Private
 extension YkSupabasePrivateExtension on YkSupabaseManager {
+
   void _notifyLoading(bool isLoading, [String? message]) {
     final cb = _delegate?.onLoading;
     if (cb != null) {
