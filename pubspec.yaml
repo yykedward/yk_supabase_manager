@@ -1,6 +1,6 @@
 name: yk_supabase_manager
 description: "YkSupabaseManager"
-version: 0.0.3
+version: 0.0.4
 homepage: https://github.com/yykedward
 repository: https://github.com/yykedward/yk_supabase_manager.git
 
@@ -13,7 +13,6 @@ dependencies:
     sdk: flutter
   supabase_flutter: ^2.10.3
   flutter_udid: ^3.0.0
-  logging: ^1.3.0
 
 dev_dependencies:
   flutter_test:

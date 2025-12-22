@@ -33,9 +33,7 @@
 
 ```yaml
 dependencies:
-  yk_supabase_manager:
-    git:
-      url: https://github.com/yykedward/yk_supabase_manager.git
+  yk_supabase_manager: ^0.0.3
 ```
 
 ## 🚀 快速开始 (Getting Started)
